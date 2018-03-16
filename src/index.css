@@ -40,6 +40,9 @@ ol, ul {
   background: #14d814;
 }
 
+.square.stalemate{
+  background: red;
+}
 .kbd-navigation .square:focus {
   background: #ddd;
 }

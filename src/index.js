@@ -4,7 +4,8 @@ import './index.css';
 
 function Square(props) {
   return (
-    <button className={"square " + (props.winningSquare ? "won" : "")} onClick={props.onClick}>
+    <button className={"square" + (props.winningSquare ? " won" : ""
+      ) + (props.stalemate ? " stalemate" : "")} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -16,6 +17,7 @@ class Board extends React.Component {
         <Square 
           value={this.props.squares[i]} 
           winningSquare = {this.props.winningSquares.includes(i)}
+          stalemate = {this.props.stalemate}
           onClick={() => this.props.onClick(i)}
         />
       );
@@ -89,8 +91,6 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
 
-
-
     const moves = history.map((step, move) => {
       const desc = move ?
        'Go to move # ' + move:
@@ -102,10 +102,16 @@ class Game extends React.Component {
           </li>
         )
     })
+    console.log(moves.length);
 
     let status;
+    let stalemate;
+
     if(winner) {
       status = "Winner is " + winner.winner
+    } else if(!winner && moves.length == 10){
+      stalemate = true
+      status = "No one wins :( "
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? "X" : "O");
     }
@@ -115,13 +121,14 @@ class Game extends React.Component {
         <div className="game-board">
           <Board 
             winningSquares = {winner ? winner.squares : []}
+            stalemate = {stalemate ? true : false}
             squares = {current.squares}
             onClick = {(i) => this.handleClick(i)}
           />
         </div>
         <div className="game-info">
           <div>{ status }</div>
-          <ol>{moves}</ol>
+          <ol>{ moves }</ol>
         </div>
       </div>
     );
